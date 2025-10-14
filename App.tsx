@@ -1,7 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -21,8 +20,6 @@ const queryClient = new QueryClient({
   },
 });
 
-const Stack = createStackNavigator();
-
 export default function App() {
   return (
     <Provider store={store}>
@@ -30,8 +27,8 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <NavigationContainer>
             <AppNavigator />
-            <Toast />
           </NavigationContainer>
+          <Toast />
           <StatusBar style="auto" />
         </QueryClientProvider>
       </PersistGate>

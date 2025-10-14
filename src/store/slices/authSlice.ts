@@ -46,15 +46,23 @@ const mockRegister = async (name: string, email: string, password: string) => {
 // Async thunks
 export const loginUser = createAsyncThunk(
   'auth/login',
-  async ({ email, password }: { email: string; password: string }) => {
-    return await mockLogin(email, password);
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      return await mockLogin(email, password);
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Login failed');
+    }
   }
 );
 
 export const registerUser = createAsyncThunk(
   'auth/register',
-  async ({ name, email, password }: { name: string; email: string; password: string }) => {
-    return await mockRegister(name, email, password);
+  async ({ name, email, password }: { name: string; email: string; password: string }, { rejectWithValue }) => {
+    try {
+      return await mockRegister(name, email, password);
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Registration failed');
+    }
   }
 );
 
@@ -102,7 +110,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Login failed';
+        state.error = action.payload as string || 'Login failed';
       })
       // Register
       .addCase(registerUser.pending, (state) => {
@@ -119,7 +127,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Registration failed';
+        state.error = action.payload as string || 'Registration failed';
       })
       // Logout
       .addCase(logoutUser.fulfilled, (state) => {
