@@ -122,5 +122,11 @@ export interface PaginatedResponse<T> {
   };
 }
 
-export type RootState = ReturnType<typeof import('./index').store.getState>;
+// Remove the circular dependency by defining RootState directly
+export type RootState = {
+  auth: AuthState;
+  cart: CartState;
+  user: UserState;
+};
+
 export type AppDispatch = typeof import('./index').store.dispatch;
